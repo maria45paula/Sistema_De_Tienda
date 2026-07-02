@@ -7,7 +7,8 @@ import static org.taller.Producto.getListaProductos;
 import static org.taller.Producto.getNombreProductos;
 
 public class Pedido {
-    private List<Producto> pedidos;
+    private static List<Producto> pedidos;
+    private List<Pedido> factura;
 
     public Pedido(Producto producto) {
         this.pedidos.add(producto);
@@ -38,6 +39,9 @@ public class Pedido {
     }
 
     public static void finalizarCompra() {
-
+        System.out.println("\n--- Factura---");
+        for (Producto factura : pedidos) {
+            System.out.println("Producto:" + factura.getNombre() + " Precio:$" + factura.getPrecio());
+        }
     }
 }
