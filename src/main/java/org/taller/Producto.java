@@ -46,6 +46,15 @@ public class Producto {
 
     }
 
+    public static void mostrarListaProductos(){
+        System.out.println("\n--- Lista de Productos ---");
+        for (Producto prod : getListaProductos()) {
+            System.out.println("Producto: " + prod.getNombre() + " | Precio: $" + prod.getPrecio());
+        }
+
+
+    }
+
     public static void agregarProducto() {
 
         Scanner sc = new Scanner(System.in);
@@ -72,9 +81,9 @@ public class Producto {
 
         objetoProducto.add(new Producto(nombreProducto, precio));
         NombreProductos.add(nombreProducto);
-
-
     }
+
+
 }
 
 

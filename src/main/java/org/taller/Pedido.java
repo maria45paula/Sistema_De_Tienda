@@ -10,19 +10,22 @@ import static org.taller.Respuesta.SI;
 
 
 public class Pedido {
-    private List<Producto> pedidos = new ArrayList<>();
-    private List<Pedido> pedidosPendientes = new ArrayList<>();
+    private static List<Producto> pedidos = new ArrayList<>();
+    private static List<Pedido> pedidosPendientes = new ArrayList<>();
     private MetodosPago metodoDePago;
     private String estadoDePedido = "Pendiente";
     private int totalPedido;
 
+    public Pedido() {
+
+    }
 
     public Pedido(List<Producto> pedidos, MetodosPago metodoDePago) {
         this.pedidos = pedidos;
         this.metodoDePago = metodoDePago;
     }
 
-    public List<Producto> getPedidos() {
+    public static List<Producto> getPedidos() {
         return pedidos;
     }
 
@@ -34,17 +37,18 @@ public class Pedido {
         return totalPedido;
     }
 
-    public void agregarProductoAFactura() {
+    public static List<Pedido> getPedidosPendientes() {
+        return pedidosPendientes;
+    }
+
+    public  void agregarProductoAFactura() {
         Respuesta respuestaUsuario = SI;
         Scanner entrada = new Scanner(System.in);
         int posicion;
         do {
             posicion = 0;
             if (respuestaUsuario == SI) {
-                System.out.println("\n--- Lista de Productos ---");
-                for (Producto prod : getListaProductos()) {
-                    System.out.println("Producto: " + prod.getNombre() + " | Precio: $" + prod.getPrecio());
-                }
+               Producto.mostrarListaProductos();
                 System.out.println("Ingrese el producto a añadir en el pedido:");
                 String producto = entrada.nextLine();
 

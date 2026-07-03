@@ -1,17 +1,47 @@
 package org.taller;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
-public class Main {
-    public static void main(String[] args) {
-        //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
-        // to see how IntelliJ IDEA suggests fixing it.
-        System.out.printf("Hello and welcome!");
+import java.util.Scanner;
 
-        for (int i = 1; i <= 5; i++) {
-            //TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-            // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-            System.out.println("i = " + i);
+public class Main {
+
+    public void iniciarTienda() {
+        Scanner sc = new Scanner(System.in);
+        int respuestaUsuario;
+        System.out.println("Bienvenido");
+        boolean continuar = true;
+
+        Pedido gestorPedidos = new Pedido();
+        while (continuar) {
+
+            System.out.println();
+            System.out.println("------ SISTEMA DE TIENDA-------");
+            System.out.println();
+            System.out.println("Ingresa el numero para seleccionar una opción");
+            System.out.println("1. Hacer nuevo pedido");
+            System.out.println("2. Crear nuevo producto");
+            System.out.println("3. Ver lista de productos");
+            System.out.println("4. Ver lista de pedidos pendientes");
+            System.out.println("5. Hacer pago de pedidos pendientes");
+            System.out.println("6. Salir");
+            System.out.println();
+
+            respuestaUsuario = sc.nextInt();
+            switch (respuestaUsuario) {
+                //case 1 -> Pedido.agregarProductoAFactura();
+                case 2 -> Producto.agregarProducto();
+                case 3 -> Producto.mostrarListaProductos();
+                case 4 -> gestorPedidos.getPedidosPendientes();
+                case 5 -> gestorPedidos.finalizarCompra();
+                case 6 -> continuar = false;
+            }
         }
+    }
+    public static void main(String[] args) {
+        Main miTienda = new Main();
+        miTienda.iniciarTienda();
+
+
+
+
     }
 }
