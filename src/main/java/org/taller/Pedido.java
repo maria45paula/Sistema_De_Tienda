@@ -14,6 +14,7 @@ import static org.taller.Respuesta.SI;
 public class Pedido {
     private List<Producto> pedidos = new ArrayList<>();
     private static List<Pedido> pedidosPendientes = new ArrayList<>();
+    private static List<Pedido> pedidosPagados = new ArrayList<>();
     private MetodosPago metodoDePago;
     private String estadoDePedido = "Pendiente";
     private int totalPedido;
@@ -24,13 +25,17 @@ public class Pedido {
 
     }
 
-    public Pedido(List<Producto> pedidos, MetodosPago metodoDePago) {
+    public Pedido(List<Producto> pedidos) {
         this.pedidos = pedidos;
-        this.metodoDePago = metodoDePago;
+
     }
 
     public List<Producto> getPedidos() {
         return pedidos;
+    }
+
+    public String getEstadoDePedido() {
+        return estadoDePedido;
     }
 
     public void setEstadoDePedido(String estado) {
@@ -38,12 +43,22 @@ public class Pedido {
     }
 
     public int getTotalPedido() {
-        int total=calcularTotal();
-        return total;
+            return totalPedido;
+    }
+    public int getDescuento() {
+        return descuento;
     }
 
     public MetodosPago getMetodoDePago(){
         return metodoDePago;
+    }
+
+    public void setMetodoDePago(MetodosPago metodoDePago) {
+        this.metodoDePago = metodoDePago;
+    }
+
+    public void setTotalPedido(int totalPedido) {
+        this.totalPedido = totalPedido;
     }
 
     public void getPedidosPendientes() {
@@ -57,12 +72,34 @@ public class Pedido {
                     System.out.println("Nombre: " + producto.getNombre());
                     System.out.println("Precio: $" + producto.getPrecio());
                 }
+                System.out.println("Estado de pedido:"+pedido.getEstadoDePedido());
+                System.out.println("Descuento:$"+pedido.getDescuento());
                 System.out.println("Total:$"+pedido.getTotalPedido());
                 System.out.println("Metodo de pago:"+pedido.getMetodoDePago());
 
 
                 i++;
             }
+    }
+
+    public void getPedidosPagados() {
+        int i = 1;
+        System.out.println("--Lista de pedidos Pagados--");
+
+        for (Pedido pedido : pedidosPagados) {
+            System.out.println("Pedido " + i);
+
+            for (Producto producto : pedido.getPedidos()) {
+                System.out.println("Nombre: " + producto.getNombre());
+                System.out.println("Precio: $" + producto.getPrecio());
+            }
+
+            System.out.println("Total: $" + pedido.getTotalPedido());
+            System.out.println("Descuento: $" + pedido.getDescuento());
+            System.out.println("Método de pago: " + pedido.getMetodoDePago());
+
+            i++;
+        }
     }
 
     public  void agregarProductoAFactura() {
@@ -95,7 +132,14 @@ public class Pedido {
             } while (respuestaUsuario != Respuesta.SI && respuestaUsuario != Respuesta.NO);
 
         } while (respuestaUsuario == Respuesta.SI);
-        finalizarCompra();
+        Pedido nuevoPedido = new Pedido(new ArrayList<>(pedidos));
+        nuevoPedido.calcularTotal();
+
+
+        pedidosPendientes.add(nuevoPedido);
+
+        pedidos.clear();
+        respuestaUsuario = SI;
     }
 
     public void aplicarDescuento(){
@@ -117,19 +161,18 @@ public class Pedido {
                 if (numero == 1) {
                     DescuentoPorcentual desc = new DescuentoPorcentual();
                     int precioFinal = desc.aplicarDescuento(this);
+                    this.descuento = totalPedido - precioFinal;
                     this.totalPedido = precioFinal;
                     System.out.println("El precio total con el descuento es de:"+totalPedido);
                 } else if (numero == 2) {
                     DescuentoParcial desc = new DescuentoParcial();
                     int precioFinal = desc.aplicarDescuento(this);
+                    this.descuento = totalPedido - precioFinal;
                     this.totalPedido = precioFinal;
                     System.out.println("El precio total con el descuento es de:"+totalPedido);
 
                 }
             }
-
-
-
     }
 
     public void descuentoListaObjetoPedido(){
@@ -147,7 +190,9 @@ public class Pedido {
             Pedido pedidoSeleccionado = pedidosPendientes.get(opcion - 1);
 
             pedidoSeleccionado.aplicarDescuento();
+            pedidoSeleccionado.finalizarCompra();
     }
+
 
     public void finalizarCompra() {
         Scanner entrada = new Scanner(System.in);
@@ -156,10 +201,11 @@ public class Pedido {
             System.out.println("Producto:" + factura.getNombre() + " Precio:$" + factura.getPrecio());
         }
 
-        int total = calcularTotal();
-        System.out.println("El valor total del pedido es de:" + total);
+        if (totalPedido == 0) {
+            calcularTotal();
+        }
 
-        aplicarDescuento();
+        System.out.println("El valor total del pedido es de: $" + totalPedido);
 
         System.out.println("Elija el metodo de pago: (TARJETA DE CREDITO / PAYPAL)");
 
@@ -179,10 +225,11 @@ public class Pedido {
             metodoDePago.TARJETADECREDITO.pagoTargeta();
 
         }
-        pedidosPendientes.add(new Pedido(new ArrayList<>(pedidos), metodoDePago));
+        this.estadoDePedido="Pagado";
+        pedidosPagados.add(this);
+        pedidosPendientes.remove(this);
+        System.out.println("El pedido fue pagado y eliminado de la lista de pendientes.");
 
-        pedidos.clear();
-        totalPedido = 0;
         respuestaUsuario = SI;
 
     }
@@ -193,6 +240,6 @@ public class Pedido {
             total += precio.getPrecio();
         }
         this.totalPedido = total;
-        return total;
+        return totalPedido;
     }
 }
