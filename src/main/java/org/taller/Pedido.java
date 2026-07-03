@@ -13,7 +13,7 @@ public class Pedido {
     private List<Producto> pedidos = new ArrayList<>();
     private List<Pedido> pedidosPendientes = new ArrayList<>();
     private MetodosPago metodoDePago;
-    private String estadoDePedido;
+    private String estadoDePedido = "Pendiente";
 
     public Pedido(List<Producto> pedidos) {
         this.pedidos = pedidos;
@@ -56,9 +56,7 @@ public class Pedido {
 
         System.out.println("Elija el metodo de pago:");
         metodoDePago = MetodosPago.valueOf(entrada.nextLine());
-
-        Pedido pedido = new Pedido(new ArrayList<>(pedidos));
-        pedidosPendientes.add(pedido);
+        pedidosPendientes.add(new Pedido(new ArrayList<>(pedidos)));
 
     }
 }
