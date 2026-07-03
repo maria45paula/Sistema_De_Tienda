@@ -81,6 +81,8 @@ public class Producto {
 
         objetoProducto.add(new Producto(nombreProducto, precio));
         NombreProductos.add(nombreProducto);
+
+        System.out.println("Producto agregado exitosamente");
     }
 
 

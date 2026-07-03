@@ -27,7 +27,7 @@ public class Main {
 
             respuestaUsuario = sc.nextInt();
             switch (respuestaUsuario) {
-                //case 1 -> Pedido.agregarProductoAFactura();
+                case 1 -> gestorPedidos.agregarProductoAFactura();
                 case 2 -> Producto.agregarProducto();
                 case 3 -> Producto.mostrarListaProductos();
                 case 4 -> gestorPedidos.getPedidosPendientes();
@@ -39,8 +39,6 @@ public class Main {
     public static void main(String[] args) {
         Main miTienda = new Main();
         miTienda.iniciarTienda();
-
-
 
 
     }

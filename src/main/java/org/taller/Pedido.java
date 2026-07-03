@@ -4,13 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import static org.taller.MetodosPago.PAYPAL;
+import static org.taller.MetodosPago.TARGETA_DE_CREDITO;
 import static org.taller.Producto.getListaProductos;
 import static org.taller.Producto.getNombreProductos;
+import static org.taller.Respuesta.NO;
 import static org.taller.Respuesta.SI;
 
 
 public class Pedido {
-    private static List<Producto> pedidos = new ArrayList<>();
+    private List<Producto> pedidos = new ArrayList<>();
     private static List<Pedido> pedidosPendientes = new ArrayList<>();
     private MetodosPago metodoDePago;
     private String estadoDePedido = "Pendiente";
@@ -25,7 +28,7 @@ public class Pedido {
         this.metodoDePago = metodoDePago;
     }
 
-    public static List<Producto> getPedidos() {
+    public List<Producto> getPedidos() {
         return pedidos;
     }
 
@@ -37,7 +40,7 @@ public class Pedido {
         return totalPedido;
     }
 
-    public static List<Pedido> getPedidosPendientes() {
+    public  static List<Pedido> getPedidosPendientes() {
         return pedidosPendientes;
     }
 
@@ -49,7 +52,7 @@ public class Pedido {
             posicion = 0;
             if (respuestaUsuario == SI) {
                Producto.mostrarListaProductos();
-                System.out.println("Ingrese el producto a añadir en el pedido:");
+                System.out.println("Ingrese el nombre del producto a añadir en el pedido:");
                 String producto = entrada.nextLine();
 
                 for (String nombre : getNombreProductos()) {
@@ -59,9 +62,15 @@ public class Pedido {
                     }
                     posicion++;
                 }
-            }
-            System.out.println("¿Desea ingresar otro producto a su pedido?");
-            respuestaUsuario = Respuesta.valueOf(entrada.nextLine());
+            } do {
+                System.out.println("¿Desea ingresar otro producto a su pedido? SI/NO");
+                respuestaUsuario = Respuesta.valueOf(entrada.nextLine());
+
+                if(respuestaUsuario != SI && respuestaUsuario != NO){
+                    System.out.println("Respuesta invalida. por favor intente de nuevo");
+                }
+            }while( respuestaUsuario != SI && respuestaUsuario != NO);
+
         } while (respuestaUsuario == Respuesta.SI);
         finalizarCompra();
     }
@@ -76,8 +85,12 @@ public class Pedido {
         int total = calcularTotal();
         System.out.println("El valor total del pedido es de:" + total);
 
-        System.out.println("Elija el metodo de pago:");
+        System.out.println("Elija el metodo de pago: (TARGETA DE CREDITO / PAYPAL)");
         metodoDePago = MetodosPago.valueOf(entrada.nextLine());
+        while(metodoDePago != TARGETA_DE_CREDITO && metodoDePago != PAYPAL ){
+            System.out.println("Error: Escribe la opción correctamente (TARGETA DE CREDITO / PAYPAL)");
+            metodoDePago = MetodosPago.valueOf(entrada.nextLine());
+        }
 
         if (metodoDePago == metodoDePago.PAYPAL) {
             metodoDePago.PAYPAL.pagoPaypal();
@@ -97,7 +110,7 @@ public class Pedido {
                 }
             }
         } else {
-            metodoDePago.TARGETA_DE_CREDITO.pagoTargeta();
+            TARGETA_DE_CREDITO.pagoTargeta();
             System.out.println("¿Desea aplicar un descuento?");
             Respuesta respuestaUsuario = Respuesta.valueOf(entrada.nextLine());
             if (respuestaUsuario == SI) {
