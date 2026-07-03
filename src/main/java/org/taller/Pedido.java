@@ -59,4 +59,12 @@ public class Pedido {
         pedidosPendientes.add(new Pedido(new ArrayList<>(pedidos)));
 
     }
+
+    public int calcularTotal(){
+        int total = 0;
+        for(Producto precio : pedidos){
+            total+= precio.getPrecio();
+        }
+        return total;
+    }
 }

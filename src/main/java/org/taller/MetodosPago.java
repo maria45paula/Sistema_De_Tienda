@@ -2,6 +2,7 @@ package org.taller;
 
 import java.util.Scanner;
 
+
 public enum MetodosPago {
     TARGETA_DE_CREDITO, PAYPAL;
 
@@ -30,6 +31,7 @@ public enum MetodosPago {
     public void pagoPaypal(){
         Scanner scanner = new Scanner(System.in);
         int contadorArroba = 0;
+        int total = Pedido.calcularTotal();
         do{
              contadorArroba = 0;
             System.out.println("Ingrese su correo electronico");
@@ -44,7 +46,9 @@ public enum MetodosPago {
                             complemento.equals("hotmail.com") ||
                             complemento.equals("outlook.com")) {
 
+                        System.out.println("El total de su pedido es: $" + Pedido.calcularTotal());
                         System.out.println("Pago exitoso, el estado de su pedido es pendiente");
+
                     } else{
                         System.out.println("Correo invalido, intente de nuevo");
                         contadorArroba++;
@@ -54,5 +58,6 @@ public enum MetodosPago {
        }while(contadorArroba != 1);
 
     }
+
 }
 
