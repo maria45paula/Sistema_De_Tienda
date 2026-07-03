@@ -5,10 +5,9 @@ import java.util.List;
 import java.util.Scanner;
 
 import static org.taller.MetodosPago.PAYPAL;
-import static org.taller.MetodosPago.TARGETA_DE_CREDITO;
+import static org.taller.MetodosPago.TARJETADECREDITO;
 import static org.taller.Producto.getListaProductos;
 import static org.taller.Producto.getNombreProductos;
-import static org.taller.Respuesta.NO;
 import static org.taller.Respuesta.SI;
 
 
@@ -18,6 +17,8 @@ public class Pedido {
     private MetodosPago metodoDePago;
     private String estadoDePedido = "Pendiente";
     private int totalPedido;
+    private Respuesta respuestaUsuario=SI;
+    private int descuento;
 
     public Pedido() {
 
@@ -40,12 +41,30 @@ public class Pedido {
         return totalPedido;
     }
 
-    public  static List<Pedido> getPedidosPendientes() {
-        return pedidosPendientes;
+    public MetodosPago getMetodoDePago(){
+        return metodoDePago;
+    }
+
+    public void getPedidosPendientes() {
+            int i = 1;
+            System.out.println("--Lista de pedidos Pendientes--");
+
+            for (Pedido pedido : pedidosPendientes) {
+                System.out.println("Pedido " + i);
+
+                for (Producto producto : pedido.getPedidos()) {
+                    System.out.println("Nombre: " + producto.getNombre());
+                    System.out.println("Precio: $" + producto.getPrecio());
+                }
+                System.out.println("Total:$"+pedido.calcularTotal());
+                System.out.println("Metodo de pago:"+getMetodoDePago());
+
+
+                i++;
+            }
     }
 
     public  void agregarProductoAFactura() {
-        Respuesta respuestaUsuario = SI;
         Scanner entrada = new Scanner(System.in);
         int posicion;
         do {
@@ -64,15 +83,57 @@ public class Pedido {
                 }
             } do {
                 System.out.println("¿Desea ingresar otro producto a su pedido? SI/NO");
-                respuestaUsuario = Respuesta.valueOf(entrada.nextLine());
+                String textoIngresado = entrada.nextLine().trim().toUpperCase();
 
-                if(respuestaUsuario != SI && respuestaUsuario != NO){
-                    System.out.println("Respuesta invalida. por favor intente de nuevo");
+                try {
+                    respuestaUsuario = Respuesta.valueOf(textoIngresado);
+                } catch (IllegalArgumentException e) {
+                    System.out.println("Respuesta inválida. Por favor intente de nuevo.");
                 }
-            }while( respuestaUsuario != SI && respuestaUsuario != NO);
+
+            } while (respuestaUsuario != Respuesta.SI && respuestaUsuario != Respuesta.NO);
 
         } while (respuestaUsuario == Respuesta.SI);
         finalizarCompra();
+    }
+
+    public void aplicarDescuento(){
+        Scanner entrada=new Scanner(System.in);
+        System.out.println("¿Desea aplicar un descuento?");
+
+        do{
+            try {
+                String textoIngresado = entrada.nextLine().trim().toUpperCase();
+                respuestaUsuario = Respuesta.valueOf(textoIngresado);
+            } catch (IllegalArgumentException e) {
+                System.out.println("Respuesta inválida. Por favor intente de nuevo.");
+            }
+        } while (respuestaUsuario != Respuesta.SI && respuestaUsuario != Respuesta.NO);
+
+            if (respuestaUsuario == SI) {
+                System.out.println("1:Descuento porcentual \n 2:Descuento Parcial");
+                int numero = entrada.nextInt();
+                if (numero == 1) {
+                    DescuentoPorcentual desc = new DescuentoPorcentual();
+                    int precioFinal = desc.aplicarDescuento(new Pedido(new ArrayList<>(pedidos), metodoDePago));
+                    this.totalPedido = precioFinal;
+                    System.out.println("El precio total con el descuento es de:"+totalPedido);
+                } else if (numero == 2) {
+                    DescuentoParcial desc = new DescuentoParcial();
+                    int precioFinal = desc.aplicarDescuento(new Pedido(new ArrayList<>(pedidos), metodoDePago));
+                    this.totalPedido = precioFinal;
+                    System.out.println("El precio total con el descuento es de:"+totalPedido);
+
+                }
+            }
+
+
+
+    }
+
+    public void descuentoListaObjetoPedido(){
+        getPedidosPendientes();
+        aplicarDescuento();
     }
 
     public void finalizarCompra() {
@@ -85,47 +146,24 @@ public class Pedido {
         int total = calcularTotal();
         System.out.println("El valor total del pedido es de:" + total);
 
-        System.out.println("Elija el metodo de pago: (TARGETA DE CREDITO / PAYPAL)");
-        metodoDePago = MetodosPago.valueOf(entrada.nextLine());
-        while(metodoDePago != TARGETA_DE_CREDITO && metodoDePago != PAYPAL ){
-            System.out.println("Error: Escribe la opción correctamente (TARGETA DE CREDITO / PAYPAL)");
-            metodoDePago = MetodosPago.valueOf(entrada.nextLine());
-        }
+        aplicarDescuento();
+
+        System.out.println("Elija el metodo de pago: (TARJETA DE CREDITO / PAYPAL)");
+
+        do{
+            try {
+                String textoIngresado = entrada.nextLine().trim().toUpperCase();
+                metodoDePago = MetodosPago.valueOf(textoIngresado);
+            } catch (IllegalArgumentException e) {
+                System.out.println("Respuesta inválida. Por favor intente de nuevo.");
+            }
+        } while(metodoDePago != TARJETADECREDITO && metodoDePago != PAYPAL );
 
         if (metodoDePago == metodoDePago.PAYPAL) {
             metodoDePago.PAYPAL.pagoPaypal();
-            System.out.println("¿Desea aplicar un descuento?");
-            Respuesta respuestaUsuario = Respuesta.valueOf(entrada.nextLine());
-            if (respuestaUsuario == SI) {
-                System.out.println("1:Descuento porcentual \n 2:Descuento Parcial");
-                int numero = entrada.nextInt();
-                if (numero == 1) {
-                    DescuentoPorcentual desc = new DescuentoPorcentual();
-                    int precioFinal = desc.aplicarDescuento(new Pedido(new ArrayList<>(pedidos), metodoDePago));
-                    this.totalPedido = precioFinal;
-                } else if (numero == 2) {
-                    DescuentoParcial desc = new DescuentoParcial();
-                    int precioFinal = desc.aplicarDescuento(new Pedido(new ArrayList<>(pedidos), metodoDePago));
-                    this.totalPedido = precioFinal;
-                }
-            }
-        } else {
-            TARGETA_DE_CREDITO.pagoTargeta();
-            System.out.println("¿Desea aplicar un descuento?");
-            Respuesta respuestaUsuario = Respuesta.valueOf(entrada.nextLine());
-            if (respuestaUsuario == SI) {
-                System.out.println("1:Descuento porcentual \n 2:Descuento Parcial");
-                int numero = entrada.nextInt();
-                if (numero == 1) {
-                    DescuentoPorcentual desc = new DescuentoPorcentual();
-                    int precioFinal = desc.aplicarDescuento(new Pedido(new ArrayList<>(pedidos), metodoDePago));
-                    this.totalPedido = precioFinal;
-                } else if (numero == 2) {
-                    DescuentoParcial desc = new DescuentoParcial();
-                    int precioFinal = desc.aplicarDescuento(new Pedido(new ArrayList<>(pedidos), metodoDePago));
-                    this.totalPedido = precioFinal;
-                }
-            }
+
+        } else if(metodoDePago == metodoDePago.TARJETADECREDITO) {
+            metodoDePago.TARJETADECREDITO.pagoTargeta();
 
         }
         pedidosPendientes.add(new Pedido(new ArrayList<>(pedidos), metodoDePago));

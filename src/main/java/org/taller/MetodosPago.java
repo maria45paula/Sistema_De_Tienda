@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 
 public enum MetodosPago {
-    TARGETA_DE_CREDITO, PAYPAL;
+    TARJETADECREDITO, PAYPAL;
 
     public void pagoTargeta() {
 
@@ -31,25 +31,29 @@ public enum MetodosPago {
     public void pagoPaypal() {
         Scanner scanner = new Scanner(System.in);
         int contadorArroba = 0;
+        String complemento = "";
         do {
             contadorArroba = 0;
             System.out.println("Ingrese su correo electronico");
             String correo = scanner.nextLine();
 
+
             for (int i = 0; i < correo.length(); i++) {
 
                 if (correo.charAt(i) == '@') {
                     contadorArroba++;
-                    String complemento = correo.substring(i, correo.length() - 1);
-                    if (complemento.equals("gmail.com") ||
-                            complemento.equals("hotmail.com") ||
-                            complemento.equals("outlook.com")) {
+                    if (correo.charAt(i) == '@') {
+                        complemento= correo.substring(i);
+                        if (complemento.equals("@gmail.com") ||
+                            complemento.equals("@hotmail.com") ||
+                            complemento.equals("@outlook.com")) {
 
-                        System.out.println("Pago exitoso, el estado de su pedido es pendiente");
+                            System.out.println("Pago exitoso, el estado de su pedido es pendiente");
 
-                    } else {
-                        System.out.println("Correo invalido, intente de nuevo");
-                        contadorArroba++;
+                        } else {
+                            System.out.println("Correo invalido, intente de nuevo");
+                            contadorArroba++;
+                        }
                     }
                 }
             }

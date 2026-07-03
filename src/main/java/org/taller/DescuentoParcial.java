@@ -16,6 +16,7 @@ public class DescuentoParcial extends Descuentos {
 
     @Override
     public int aplicarDescuento(Pedido miPedido) {
-        return 0;
+        int nuevoPrecio = operacionDescuentoParcial(miPedido);
+        return nuevoPrecio;
     }
 }

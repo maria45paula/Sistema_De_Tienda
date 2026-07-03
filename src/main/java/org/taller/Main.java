@@ -21,18 +21,23 @@ public class Main {
             System.out.println("2. Crear nuevo producto");
             System.out.println("3. Ver lista de productos");
             System.out.println("4. Ver lista de pedidos pendientes");
-            System.out.println("5. Hacer pago de pedidos pendientes");
-            System.out.println("6. Salir");
+            System.out.println("5. Aplicar descuento a un pedido pendiente");
+            System.out.println("6. Hacer pago de pedidos pendientes");
+            System.out.println("7. Salir");
             System.out.println();
 
             respuestaUsuario = sc.nextInt();
             switch (respuestaUsuario) {
-                case 1 -> gestorPedidos.agregarProductoAFactura();
+                case 1 -> {
+                    Pedido nuevoPedido = new Pedido();
+                    nuevoPedido.agregarProductoAFactura();
+                }
                 case 2 -> Producto.agregarProducto();
                 case 3 -> Producto.mostrarListaProductos();
                 case 4 -> gestorPedidos.getPedidosPendientes();
-                case 5 -> gestorPedidos.finalizarCompra();
-                case 6 -> continuar = false;
+                case 5 -> gestorPedidos.getPedidosPendientes();
+                case 6 -> gestorPedidos.finalizarCompra();
+                case 7 -> continuar = false;
             }
         }
     }
