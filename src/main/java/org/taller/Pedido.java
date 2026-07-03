@@ -38,7 +38,8 @@ public class Pedido {
     }
 
     public int getTotalPedido() {
-        return totalPedido;
+        int total=calcularTotal();
+        return total;
     }
 
     public MetodosPago getMetodoDePago(){
@@ -56,8 +57,8 @@ public class Pedido {
                     System.out.println("Nombre: " + producto.getNombre());
                     System.out.println("Precio: $" + producto.getPrecio());
                 }
-                System.out.println("Total:$"+pedido.calcularTotal());
-                System.out.println("Metodo de pago:"+getMetodoDePago());
+                System.out.println("Total:$"+pedido.getTotalPedido());
+                System.out.println("Metodo de pago:"+pedido.getMetodoDePago());
 
 
                 i++;
@@ -115,12 +116,12 @@ public class Pedido {
                 int numero = entrada.nextInt();
                 if (numero == 1) {
                     DescuentoPorcentual desc = new DescuentoPorcentual();
-                    int precioFinal = desc.aplicarDescuento(new Pedido(new ArrayList<>(pedidos), metodoDePago));
+                    int precioFinal = desc.aplicarDescuento(this);
                     this.totalPedido = precioFinal;
                     System.out.println("El precio total con el descuento es de:"+totalPedido);
                 } else if (numero == 2) {
                     DescuentoParcial desc = new DescuentoParcial();
-                    int precioFinal = desc.aplicarDescuento(new Pedido(new ArrayList<>(pedidos), metodoDePago));
+                    int precioFinal = desc.aplicarDescuento(this);
                     this.totalPedido = precioFinal;
                     System.out.println("El precio total con el descuento es de:"+totalPedido);
 
@@ -132,8 +133,20 @@ public class Pedido {
     }
 
     public void descuentoListaObjetoPedido(){
-        getPedidosPendientes();
-        aplicarDescuento();
+            Scanner entrada = new Scanner(System.in);
+            getPedidosPendientes();
+
+            System.out.print("Seleccione el número del pedido: ");
+            int opcion = entrada.nextInt();
+
+            if (opcion < 1 || opcion > pedidosPendientes.size()) {
+                System.out.println("Pedido no válido.");
+                return;
+            }
+
+            Pedido pedidoSeleccionado = pedidosPendientes.get(opcion - 1);
+
+            pedidoSeleccionado.aplicarDescuento();
     }
 
     public void finalizarCompra() {
@@ -167,6 +180,10 @@ public class Pedido {
 
         }
         pedidosPendientes.add(new Pedido(new ArrayList<>(pedidos), metodoDePago));
+
+        pedidos.clear();
+        totalPedido = 0;
+        respuestaUsuario = SI;
 
     }
 

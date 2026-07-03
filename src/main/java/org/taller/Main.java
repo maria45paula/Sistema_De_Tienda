@@ -1,5 +1,6 @@
 package org.taller;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Main {
@@ -26,16 +27,26 @@ public class Main {
             System.out.println("7. Salir");
             System.out.println();
 
-            respuestaUsuario = sc.nextInt();
-            switch (respuestaUsuario) {
-                case 1 -> {
-                    Pedido nuevoPedido = new Pedido();
-                    nuevoPedido.agregarProductoAFactura();
+
+            do{
+
+                if (!sc.hasNextInt()) {
+                    throw new InputMismatchException("Error: Debe ingresar un número entero.");
                 }
+                respuestaUsuario = sc.nextInt();
+
+                if(respuestaUsuario<1||respuestaUsuario>7) {
+                    System.out.println("Error. Ingrese un nuemro valido (1-7)");
+                }
+
+            }while(respuestaUsuario<1||respuestaUsuario>7);
+
+            switch (respuestaUsuario) {
+                case 1 -> gestorPedidos.agregarProductoAFactura();
                 case 2 -> Producto.agregarProducto();
                 case 3 -> Producto.mostrarListaProductos();
                 case 4 -> gestorPedidos.getPedidosPendientes();
-                case 5 -> gestorPedidos.getPedidosPendientes();
+                case 5 -> gestorPedidos.descuentoListaObjetoPedido();
                 case 6 -> gestorPedidos.finalizarCompra();
                 case 7 -> continuar = false;
             }
