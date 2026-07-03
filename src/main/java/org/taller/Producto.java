@@ -56,8 +56,6 @@ public class Producto {
             while (nombreProducto.equalsIgnoreCase(producto)) {
                 System.out.println("Este nombre ya esta en uso, intente de nuevo");
                 nombreProducto = sc.nextLine();
-
-                if (!nombreProducto.equalsIgnoreCase(producto)) break;
             }
         }
 

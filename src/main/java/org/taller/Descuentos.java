@@ -1,6 +1,6 @@
 package org.taller;
 
-public enum Descuentos {
-    DESCUENTO_PORCENTUAL,
-    CUPON_DESCUENTO
+abstract class Descuentos {
+
+    public abstract int aplicarDescuento(Pedido miPedido);
 }
