@@ -105,20 +105,45 @@ public class Pedido {
     public  void agregarProductoAFactura() {
         Scanner entrada = new Scanner(System.in);
         int posicion;
+        Producto productoVacio = new Producto();
+        List<String> productooo = getNombreProductos();
+
+
+        if(Producto.getListaProductos().isEmpty()){
+            System.out.println("No hay ningun producto, no puede realizar el pedido");
+            return;
+        }
+
         do {
             posicion = 0;
             if (respuestaUsuario == SI) {
                Producto.mostrarListaProductos();
-                System.out.println("Ingrese el nombre del producto a añadir en el pedido:");
-                String producto = entrada.nextLine();
+                      System.out.println("Ingrese el nombre del producto a añadir en el pedido:");
+                      String producto;
+                      boolean acceptable = true;
 
-                for (String nombre : getNombreProductos()) {
+                    do {
+                        producto = entrada.nextLine();
+                        for (int i = 0; productooo.size() > i; i++) {
+                            if (!(productooo.get(i)).equalsIgnoreCase(producto)) {
+                                acceptable = false;
+                            } else{ acceptable = true;
 
-                    if (producto.equalsIgnoreCase(nombre)) {
-                        pedidos.add(getListaProductos().get(posicion));
+                            }
+
+                        }
+                         if(acceptable == true){ break;}
+                        System.out.println("El producto ingresado no existe, intente de nuevo");
+
+                    } while(acceptable== false);
+
+                    for (String nombre : getNombreProductos()) {
+                        if (producto.equalsIgnoreCase(nombre)) {
+                            pedidos.add(getListaProductos().get(posicion));
+                        }
+                        posicion++;
                     }
-                    posicion++;
-                }
+
             } do {
                 System.out.println("¿Desea ingresar otro producto a su pedido? SI/NO");
                 String textoIngresado = entrada.nextLine().trim().toUpperCase();
@@ -134,6 +159,7 @@ public class Pedido {
         } while (respuestaUsuario == Respuesta.SI);
         Pedido nuevoPedido = new Pedido(new ArrayList<>(pedidos));
         nuevoPedido.calcularTotal();
+        nuevoPedido.finalizarCompra();
 
 
         pedidosPendientes.add(nuevoPedido);
@@ -173,6 +199,9 @@ public class Pedido {
 
                 }
             }
+        this.estadoDePedido="Pagado";
+        pedidosPagados.add(this);
+        pedidosPendientes.remove(this);
     }
 
     public void descuentoListaObjetoPedido(){
@@ -188,9 +217,11 @@ public class Pedido {
             }
 
             Pedido pedidoSeleccionado = pedidosPendientes.get(opcion - 1);
-
             pedidoSeleccionado.aplicarDescuento();
-            pedidoSeleccionado.finalizarCompra();
+
+
+        System.out.println("El pedido fue pagado y eliminado de la lista de pendientes.");
+
     }
 
 
@@ -225,10 +256,7 @@ public class Pedido {
             metodoDePago.TARJETADECREDITO.pagoTargeta();
 
         }
-        this.estadoDePedido="Pagado";
-        pedidosPagados.add(this);
-        pedidosPendientes.remove(this);
-        System.out.println("El pedido fue pagado y eliminado de la lista de pendientes.");
+        System.out.println("Información de pago guardada con exito.");
 
         respuestaUsuario = SI;
 
