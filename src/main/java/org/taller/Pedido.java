@@ -156,7 +156,7 @@ public class Pedido {
         } while (respuestaUsuario != Respuesta.SI && respuestaUsuario != Respuesta.NO);
 
             if (respuestaUsuario == SI) {
-                System.out.println("1:Descuento porcentual \n 2:Descuento Parcial");
+                System.out.println("1:Descuento porcentual \n2:Descuento Parcial");
                 int numero = entrada.nextInt();
                 if (numero == 1) {
                     DescuentoPorcentual desc = new DescuentoPorcentual();
