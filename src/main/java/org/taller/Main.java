@@ -23,7 +23,7 @@ public class Main {
             System.out.println("3. Ver lista de productos");
             System.out.println("4. Ver lista de pedidos pendientes");
             System.out.println("5. Ver lista de pedidos pagados");
-            System.out.println("6. Procesar pagos");
+            System.out.println("6. Aplicar descuento a un pedido pendiente o pagar pedidos pendientes");
             System.out.println("7. Salir");
             System.out.println();
 
