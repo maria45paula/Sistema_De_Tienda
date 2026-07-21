@@ -170,7 +170,7 @@ public class Pedido {
 
     public void aplicarDescuento(){
         Scanner entrada=new Scanner(System.in);
-        System.out.println("¿Desea aplicar un descuento?");
+        System.out.println("¿Desea aplicar un descuento? SI/NO");
 
         do{
             try {

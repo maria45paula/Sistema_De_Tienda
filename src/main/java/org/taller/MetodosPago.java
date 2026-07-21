@@ -48,7 +48,7 @@ public enum MetodosPago {
                             complemento.equals("@hotmail.com") ||
                             complemento.equals("@outlook.com")) {
 
-                            System.out.println("Pago exitoso, el estado de su pedido es pendiente");
+                            System.out.println("Ingreso de datos exitoso, el estado de su pedido es pendiente");
 
                         } else {
                             System.out.println("Correo invalido, intente de nuevo");
