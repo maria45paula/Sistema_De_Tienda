@@ -46,6 +46,9 @@ public class Producto {
 
     }
 
+    public Producto() {
+    }
+
     public static void mostrarListaProductos(){
         System.out.println("\n--- Lista de Productos ---");
         for (Producto prod : getListaProductos()) {
